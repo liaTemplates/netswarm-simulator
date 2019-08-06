@@ -120,7 +120,7 @@ attribute: Thanx to [wvengen](https://github.com/wvengen/netswarm-arduino) for
 [NetSwarm](https://github.com/wvengen/netswarm-arduino)
 
 
-# `@NetSwarm.single_loop`
+## `@NetSwarm.single_loop`
 
 ```cpp
 void setup() {
@@ -134,7 +134,7 @@ void loop() {
 @NetSwarm.single_loop
 
 
-# `@NetSwarm.sloop`
+## `@NetSwarm.sloop`
 
 ```cpp
 void setup() {
@@ -156,3 +156,6 @@ void loop() {
 }
 ```
 @NetSwarm.loop
+
+
+## Implementation

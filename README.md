@@ -1,7 +1,7 @@
 <!--
-author:   Your Name
+author:   André Dietrich & Sebastian Zug
 
-email:    your@mail.org
+email:    andre.dietrich@ovgu.de
 
 version:  0.0.1
 
@@ -9,10 +9,9 @@ language: en
 
 narrator: US English Female
 
-comment:  Try to write a short comment about
-          your course, multiline is also okay.
+comment:  A Arduino-Simulator template for JavaScript based on NetSwarm.
 
-script:   dist/index.js
+script:   https://cdn.jsdelivr.net/gh/LiaTemplates/netswarm-simulator/dist/index.js
 
 @onload
 window.stopper = {}
@@ -20,9 +19,7 @@ window.stopper = {}
 
 @NetSwarm.single_loop
 <script>
-
 let output = ""
-
 let comp = window.Compiler(
   {stdio: {
     write: s => {
@@ -36,7 +33,6 @@ let comp = window.Compiler(
     drain: () => {},
   }}
 )
-
 
 let error = comp.compile(`@input`)
 if(!error) {
@@ -54,18 +50,15 @@ if(!error) {
   throw errorMsg ;
 }
 
-
 </script>
 
 @end
-
 
 @NetSwarm.loop: @NetSwarm.run_(@uid,@input)
 
 @NetSwarm.run_
 <script>
 send.handle("stop",  (e) => {window.stopper['@0'] = true});
-
 window.stopper['@0'] = false;
 
 let output = ""
@@ -115,6 +108,10 @@ if(!error) {
 </script>
 
 @end
+
+attribute: Thanx to [wvengen](https://github.com/wvengen/netswarm-arduino) for
+           the original implementation of NetSwarm.
+
 -->
 
 # NetSwarm-Simulator

@@ -1,43 +1,161 @@
-NetSwarm simulator
-==================
+<!--
+author:   Your Name
 
-The real fun with [NetSwarm](https://github.com/wvengen/netswarm-arduino) starts when
-multiple nodes begin to act on each other. This simulator gives some visual examples of
-how it works, and helps running a NetSwarm network without needing the hardware.
+email:    your@mail.org
 
-**This isn't fully finished yet. Enjoy a basic Arduino simulator, help out to finish it, or come back later.**
+version:  0.0.1
 
-Visit the [online Arduino simulator](https://wvengen.github.io/netswarm-simulator).
+language: en
 
-![screenshot](screenshot.png)
+narrator: US English Female
+
+comment:  Try to write a short comment about
+          your course, multiline is also okay.
+
+script:   dist/index.js
+
+@onload
+window.stopper = {}
+@end
+
+@NetSwarm.single_loop
+<script>
+
+let output = ""
+
+let comp = window.Compiler(
+  {stdio: {
+    write: s => {
+      if (s == '\n') {
+        console.log(output)
+        output = ""
+      }
+      else {
+        output += s
+      }},
+    drain: () => {},
+  }}
+)
 
 
-Development
------------
+let error = comp.compile(`@input`)
+if(!error) {
+  try{
+    comp.setup()
+    comp.load('loop');
+    comp.run();
+  } catch (e) {
+    console.error("something went wrong, plz check your code...")
+  }
+  "LIA: stop"
+} else {
+  var errorMsg = new LiaError("line:"+error.line+"\n"+error.message, 1);
+  errorMsg.add_detail(0, error.message, "error", error.line-1,error.column);
+  throw errorMsg ;
+}
 
-Start the webserver
 
-```sh
-$ npm install
-$ npm start
+</script>
+
+@end
+
+
+@NetSwarm.loop: @NetSwarm.run_(@uid,@input)
+
+@NetSwarm.run_
+<script>
+send.handle("stop",  (e) => {window.stopper['@0'] = true});
+
+window.stopper['@0'] = false;
+
+let output = ""
+
+function step(comp) {
+  if(!window.stopper['@0']) {
+    setTimeout(function(e){
+      try {
+        comp.load('loop');
+        comp.run();
+        step(comp);
+      } catch(e) {
+        console.error("something went wrong, plz check your code...")
+        send.lia("LIA: stop");
+      }
+    }, 100);
+  }
+}
+
+let comp = window.Compiler(
+  {stdio: {
+    write: s => {
+      if (s == '\n') {
+        console.log(output)
+        output = ""
+      }
+      else {
+        output += s
+      }
+    },
+    drain: () => {},
+  }}
+)
+
+let error = comp.compile(`@1`)
+if(!error) {
+  window.stopper['@0'] = false;
+  comp.setup()
+  step(comp);
+  "LIA: terminal"
+} else {
+  var errorMsg = new LiaError("line:"+error.line+"\n"+error.message, 1);
+  errorMsg.add_detail(0, error.message, "error", error.line-1,error.column);
+  throw errorMsg ;
+}
+
+</script>
+
+@end
+-->
+
+# NetSwarm-Simulator
+
+
+[NetSwarm](https://github.com/wvengen/netswarm-arduino)
+
+
+# `@NetSwarm.single_loop`
+
+```cpp
+void setup() {
+  Serial.println("Hello setup.");
+}
+
+void loop() {
+  Serial.println("Hello loop.");
+}
 ```
+@NetSwarm.single_loop
 
-and open http://localhost:8080/
 
+# `@NetSwarm.sloop`
 
-Deployment
-----------
+```cpp
+void setup() {
+  Serial.println("Hello stuff.");
+}
 
-Build the document root
+void thing(char i) {
+  switch(i) {
+  case 0: Serial.println("a pear"); break;
+  case 1: Serial.println("an apple"); break;
+  case 2: Serial.println("an elephant"); break;
+  case 3: Serial.println("an arduino"); break;
+  }
+}
 
-```sh
-$ npm run build
+void loop() {
+  Serial.print("here's ");
+  thing(random(4));
+}
 ```
-
-and copy the files in `build/` to the webserver.
-
-
-License
--------
-
-GPL version 3 or later, please see [LICENSE](LICENSE.md) for the full text.
+@NetSwarm.loop
